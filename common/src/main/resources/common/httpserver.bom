@@ -1,0 +1,27 @@
+brooklyn.catalog:
+  version: "1.0.0-SNAPSHOT" 
+  items:
+  - id: test-http-server
+    itemType: entity
+    name: Test http server
+    iconUrl: https://pbs.twimg.com/profile_images/770492216863236096/8igZkijg.jpg
+    item:
+      services:
+      - type: org.apache.brooklyn.entity.software.base.VanillaSoftwareProcess
+        name: test http
+        brooklyn.parameters:
+        - name: server.port
+          default: 2389
+        brooklyn.config:
+          launch.command: |
+            while true; do
+            echo -e "HTTP/1.1 200 OK\n\n" | nc -l 2389 > output.txt
+            done
+        
+        brooklyn.initializers:
+          - type: org.apache.brooklyn.core.sensor.ssh.SshCommandSensor
+            brooklyn.config:
+              name: server.last.call
+              targetType: string
+              period: 1s
+              command: "cat output.txt"

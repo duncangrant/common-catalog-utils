@@ -276,6 +276,20 @@ brooklyn.catalog:
           - type: assert-process-running
 
     ###
+     # Invokes restart, and confirms the entity/process and machine comes back up. 
+     # 
+     # Expects "process.grep.name" to be configured (e.g. with "[p]ostgres")
+     ##
+    - id: assert-restart-machine
+      item:
+        type: test-case
+        name: "Restart process, and confirm up"
+        brooklyn.children:
+          - type: invoke-restart-machine
+          - type: assert-up-and-running
+          - type: assert-process-running
+
+    ###
      # Invokes stop, and then restart. It confirms the entity/process was stopped and then 
      # starts again.
      # 
